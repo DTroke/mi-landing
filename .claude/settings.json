@@ -17,5 +17,18 @@
       "Bash(curl:* | bash)",
       "Bash(curl:* | sh)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "open /Users/dtroke/mi-landing/index.html"
+          }
+        ]
+      }
+    ]
   }
 }
