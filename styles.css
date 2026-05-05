@@ -511,6 +511,14 @@ ul { list-style: none; }
   display: flex;
   gap: .625rem;
 }
+.project-card__links .btn--ghost {
+  border-color: rgba(255,255,255,.22);
+  background: rgba(255,255,255,.06);
+}
+.project-card__links .btn--ghost:hover {
+  border-color: rgba(255,255,255,.4);
+  background: rgba(255,255,255,.1);
+}
 
 /* ─── CONTACTO ───────────────────────────────────────────────── */
 .contacto__inner {
