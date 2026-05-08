@@ -42,6 +42,10 @@
       box-shadow: 0 6px 28px rgba(124, 92, 252, 0.7);
     }
 
+    #chat-widget.chat-open #chat-toggle {
+      display: none;
+    }
+
     #chat-toggle svg {
       width: 28px;
       height: 28px;
@@ -126,6 +130,11 @@
         height: 100%;
         border-radius: 0;
         transform-origin: bottom center;
+      }
+
+      #chat-panel iframe {
+        height: 100%;
+        height: -webkit-fill-available;
       }
     }
   </style>
@@ -425,19 +434,26 @@
   <script src="main.js"></script>
   <script>
     (function () {
+      var widget = document.getElementById('chat-widget');
       var toggle = document.getElementById('chat-toggle');
       var panel = document.getElementById('chat-panel');
       var closeBtn = document.getElementById('chat-close');
+      var iframe = panel.querySelector('iframe');
       var open = false;
 
       function openPanel() {
         panel.classList.add('chat-panel--open');
+        widget.classList.add('chat-open');
         toggle.setAttribute('aria-expanded', 'true');
         open = true;
+        if (window.innerWidth <= 480) {
+          iframe.focus();
+        }
       }
 
       function closePanel() {
         panel.classList.remove('chat-panel--open');
+        widget.classList.remove('chat-open');
         toggle.setAttribute('aria-expanded', 'false');
         open = false;
       }
