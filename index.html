@@ -8,6 +8,127 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* --- Chat Widget --- */
+    #chat-widget {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    #chat-toggle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #7c5cfc;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(124, 92, 252, 0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+      flex-shrink: 0;
+    }
+
+    #chat-toggle:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 28px rgba(124, 92, 252, 0.7);
+    }
+
+    #chat-toggle svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    #chat-panel {
+      width: 400px;
+      height: 600px;
+      background: #1a1a2e;
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+      transform: scale(0.9) translateY(20px);
+      transform-origin: bottom right;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    #chat-panel.chat-panel--open {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .chat-panel__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: #7c5cfc;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .chat-panel__title {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    #chat-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 4px;
+      opacity: 0.85;
+      transition: opacity 0.15s;
+    }
+
+    #chat-close:hover {
+      opacity: 1;
+    }
+
+    #chat-panel iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+    }
+
+    @media (max-width: 480px) {
+      #chat-widget {
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        align-items: flex-end;
+      }
+
+      #chat-toggle {
+        margin: 0 16px 16px 0;
+      }
+
+      #chat-panel {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        transform-origin: bottom center;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -283,8 +404,54 @@
 
   <div id="cursor-glow" aria-hidden="true"></div>
 
+  <!-- CHAT WIDGET -->
+  <div id="chat-widget">
+    <div id="chat-panel" role="dialog" aria-modal="true" aria-label="Chat con DTroke Studio">
+      <div class="chat-panel__header">
+        <span class="chat-panel__title">DTroke Studio</span>
+        <button id="chat-close" aria-label="Cerrar chat">&times;</button>
+      </div>
+      <iframe src="https://ai-chatbot-demo-kappa.vercel.app" title="Chat DTroke Studio" loading="lazy"></iframe>
+    </div>
+    <button id="chat-toggle" aria-label="Abrir chat" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+      </svg>
+    </button>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="main.js"></script>
+  <script>
+    (function () {
+      var toggle = document.getElementById('chat-toggle');
+      var panel = document.getElementById('chat-panel');
+      var closeBtn = document.getElementById('chat-close');
+      var open = false;
+
+      function openPanel() {
+        panel.classList.add('chat-panel--open');
+        toggle.setAttribute('aria-expanded', 'true');
+        open = true;
+      }
+
+      function closePanel() {
+        panel.classList.remove('chat-panel--open');
+        toggle.setAttribute('aria-expanded', 'false');
+        open = false;
+      }
+
+      toggle.addEventListener('click', function () {
+        open ? closePanel() : openPanel();
+      });
+
+      closeBtn.addEventListener('click', closePanel);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && open) closePanel();
+      });
+    })();
+  </script>
 </body>
 </html>
